@@ -15,6 +15,8 @@ import org.newdawn.slick.geom.Shape;
  */
 public class Combat {
     
+    private int waitTime = 0;
+    
     private Player player;
     private PracticeTarget target;
     private int playerX = 800, playerY = 400;
@@ -24,7 +26,8 @@ public class Combat {
     private Shape mouseHitBox;
     
     private boolean playerActionAttack = false, playerActionItem = false, playerActionMagic = false,
-            enemyActionAttack = false, playerTurnOver = false, enemyTurnOver = true;
+            enemyActionAttack = false, playerTurnOver = false, enemyTurnOver = true, playerFinishedAttack = false,
+            playerHasSelectedTarget = false, enemyHasSelectedTarget = false;
     
     public Combat() {
         player = new Player(250, 10, 5, 800, 400);
@@ -60,6 +63,48 @@ public class Combat {
     public void update(int x, int y) {
         mouseHitBox.setCenterX(x);
         mouseHitBox.setCenterY(y);
+        if(playerHasSelectedTarget)
+            playPlayerActionAnimation();
+        
+        if(enemyHasSelectedTarget)
+            playEnemyActionAnimation();
+    }
+    
+    public void playEnemyActionAnimation() {
+        if(waitTime < 200) {
+            waitTime++;
+        }
+        
+        if(waitTime == 200) {
+            if(target.getTargetShape().getX() < 250 && !playerFinishedAttack) {
+                target.getTargetShape().setX(target.getTargetShape().getX() + 10);
+                if(target.getTargetShape().getX() >= 250) {
+                    playerFinishedAttack = true;
+                }
+            } else if(target.getTargetShape().getX() > 50 && playerFinishedAttack) {
+                target.getTargetShape().setX(target.getTargetShape().getX() - 10);
+                if(target.getTargetShape().getX() <= 50) {
+                    playerFinishedAttack = false;
+                    waitTime = 0;
+                    enemyHasSelectedTarget = false;
+                }
+            }
+        }
+    }
+    
+    public void playPlayerActionAnimation() {
+        if(player.getPlayerShape().getX() > 600 && !playerFinishedAttack) {
+            player.getPlayerShape().setX(player.getPlayerShape().getX() - 10);
+            if(player.getPlayerShape().getX() <= 600) {
+                playerFinishedAttack = true;
+            }
+        } else if(player.getPlayerShape().getX() < 800 && playerFinishedAttack) {
+            player.getPlayerShape().setX(player.getPlayerShape().getX() + 10);
+            if(player.getPlayerShape().getX() >= 800) {
+                playerFinishedAttack = false;
+                playerHasSelectedTarget = false;
+            }
+        }
     }
     
     public void activateActionMenu(boolean activate, Graphics g) {
@@ -216,6 +261,38 @@ public class Combat {
 
     public void setEnemyTurnOver(boolean enemyTurnOver) {
         this.enemyTurnOver = enemyTurnOver;
+    }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public boolean isPlayerFinishedAttack() {
+        return playerFinishedAttack;
+    }
+
+    public void setPlayerFinishedAttack(boolean playerFinishedAttack) {
+        this.playerFinishedAttack = playerFinishedAttack;
+    }
+
+    public boolean isPlayerHasSelectedTarget() {
+        return playerHasSelectedTarget;
+    }
+
+    public void setPlayerHasSelectedTarget(boolean playerHasSelectedTarget) {
+        this.playerHasSelectedTarget = playerHasSelectedTarget;
+    }
+
+    public boolean isEnemyHasSelectedTarget() {
+        return enemyHasSelectedTarget;
+    }
+
+    public void setEnemyHasSelectedTarget(boolean enemyHasSelectedTarget) {
+        this.enemyHasSelectedTarget = enemyHasSelectedTarget;
     }
     
     

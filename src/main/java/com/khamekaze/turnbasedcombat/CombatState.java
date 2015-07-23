@@ -83,17 +83,21 @@ public class CombatState extends BasicGameState {
             if(arena.isActionAttack()) {
                 if(arena.getMouseHitBox().intersects(arena.getTarget().getTargetShape())) {
                     if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                        arena.getPlayer().playerActionAttack(arena.getTarget());
+                        arena.setPlayerHasSelectedTarget(true);
                         arena.setActionAttack(false);
+                        arena.getPlayer().playerActionAttack(arena.getTarget());
                         arena.setPlayerTurnOver(true);
                         arena.setEnemyTurnOver(false);
                     }
                 }
             }
         } else if(arena.isPlayerTurnOver()) {
-            arena.getTarget().enemyActionAttack(arena.getPlayer());
-            arena.setEnemyTurnOver(true);
-            arena.setPlayerTurnOver(false);
+            arena.setEnemyHasSelectedTarget(true);
+            if(arena.getWaitTime() == 200) {
+                arena.getTarget().enemyActionAttack(arena.getPlayer());
+                arena.setEnemyTurnOver(true);
+                arena.setPlayerTurnOver(false);
+            }
         }
     }
 }
