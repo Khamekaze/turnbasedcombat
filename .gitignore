@@ -1,0 +1,4 @@
+*.class
+target/TurnBasedCombat-1.0-SNAPSHOT.jar
+*.xml
+*.properties
