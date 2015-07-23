@@ -23,7 +23,8 @@ public class Combat {
     private List<Shape> actionButtons;
     private Shape mouseHitBox;
     
-    private boolean playerActionAttack = false, playerActionItem = false, playerActionMagic = false;
+    private boolean playerActionAttack = false, playerActionItem = false, playerActionMagic = false,
+            enemyActionAttack = false, playerTurnOver = false, enemyTurnOver = true;
     
     public Combat() {
         player = new Player(250, 10, 5, 800, 400);
@@ -167,6 +168,54 @@ public class Combat {
 
     public void setActionMagic(boolean actionMagic) {
         this.playerActionMagic = actionMagic;
+    }
+
+    public boolean isPlayerActionAttack() {
+        return playerActionAttack;
+    }
+
+    public void setPlayerActionAttack(boolean playerActionAttack) {
+        this.playerActionAttack = playerActionAttack;
+    }
+
+    public boolean isPlayerActionItem() {
+        return playerActionItem;
+    }
+
+    public void setPlayerActionItem(boolean playerActionItem) {
+        this.playerActionItem = playerActionItem;
+    }
+
+    public boolean isPlayerActionMagic() {
+        return playerActionMagic;
+    }
+
+    public void setPlayerActionMagic(boolean playerActionMagic) {
+        this.playerActionMagic = playerActionMagic;
+    }
+
+    public boolean isEnemyActionAttack() {
+        return enemyActionAttack;
+    }
+
+    public void setEnemyActionAttack(boolean enemyActionAttack) {
+        this.enemyActionAttack = enemyActionAttack;
+    }
+
+    public boolean isPlayerTurnOver() {
+        return playerTurnOver;
+    }
+
+    public void setPlayerTurnOver(boolean playerTurnOver) {
+        this.playerTurnOver = playerTurnOver;
+    }
+
+    public boolean isEnemyTurnOver() {
+        return enemyTurnOver;
+    }
+
+    public void setEnemyTurnOver(boolean enemyTurnOver) {
+        this.enemyTurnOver = enemyTurnOver;
     }
     
     

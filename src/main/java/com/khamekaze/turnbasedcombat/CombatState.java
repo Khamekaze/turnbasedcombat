@@ -40,53 +40,60 @@ public class CombatState extends BasicGameState {
         int mouseY = input.getMouseY();
         
         arena.update(mouseX, mouseY);
-        
-        if(mouseX >= arena.getPlayerX() && mouseX <= arena.getPlayerX() + 50 &&
-                mouseY >= arena.getPlayerY() && mouseY <= arena.getPlayerY() + 100) {
-            if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                if(!actionMenuOpen) {
-                    arena.setActionAttack(false);
-                    arena.setActionItem(false);
-                    arena.setActionMagic(false);
-                    actionMenuOpen = true;
-                } else {
-                    actionMenuOpen = false;
+        if(arena.isEnemyTurnOver()) {
+            if(mouseX >= arena.getPlayerX() && mouseX <= arena.getPlayerX() + 50 &&
+                    mouseY >= arena.getPlayerY() && mouseY <= arena.getPlayerY() + 100) {
+                if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+                    if(!actionMenuOpen) {
+                        arena.setActionAttack(false);
+                        arena.setActionItem(false);
+                        arena.setActionMagic(false);
+                        actionMenuOpen = true;
+                    } else {
+                        actionMenuOpen = false;
+                    }
                 }
             }
-        }
-        
-        if(actionMenuOpen) {
-            for(Shape s : arena.getActionButtons()) {
-                if(arena.getMouseHitBox().intersects(s)) {
-                    if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                        if(s == arena.getAttackButton()) {
-                            arena.setActionAttack(true);
-                            arena.setActionItem(false);
-                            arena.setActionMagic(false);
-                            actionMenuOpen = false;
-                        } else if(s == arena.getItemButton()) {
-                            arena.setActionAttack(false);
-                            arena.setActionItem(true);
-                            arena.setActionMagic(false);
-                            actionMenuOpen = false;
-                        } else if(s == arena.getMagicButton()) {
-                            arena.setActionAttack(false);
-                            arena.setActionItem(false);
-                            arena.setActionMagic(true);
-                            actionMenuOpen = false;
+
+            if(actionMenuOpen) {
+                for(Shape s : arena.getActionButtons()) {
+                    if(arena.getMouseHitBox().intersects(s)) {
+                        if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+                            if(s == arena.getAttackButton()) {
+                                arena.setActionAttack(true);
+                                arena.setActionItem(false);
+                                arena.setActionMagic(false);
+                                actionMenuOpen = false;
+                            } else if(s == arena.getItemButton()) {
+                                arena.setActionAttack(false);
+                                arena.setActionItem(true);
+                                arena.setActionMagic(false);
+                                actionMenuOpen = false;
+                            } else if(s == arena.getMagicButton()) {
+                                arena.setActionAttack(false);
+                                arena.setActionItem(false);
+                                arena.setActionMagic(true);
+                                actionMenuOpen = false;
+                            }
                         }
                     }
                 }
             }
-        }
-        
-        if(arena.isActionAttack()) {
-            if(arena.getMouseHitBox().intersects(arena.getTarget().getTargetShape())) {
-                if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-                    arena.getPlayer().playerActionAttack(arena.getTarget());
-                    arena.setActionAttack(false);
+
+            if(arena.isActionAttack()) {
+                if(arena.getMouseHitBox().intersects(arena.getTarget().getTargetShape())) {
+                    if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+                        arena.getPlayer().playerActionAttack(arena.getTarget());
+                        arena.setActionAttack(false);
+                        arena.setPlayerTurnOver(true);
+                        arena.setEnemyTurnOver(false);
+                    }
                 }
             }
+        } else if(arena.isPlayerTurnOver()) {
+            arena.getTarget().enemyActionAttack(arena.getPlayer());
+            arena.setEnemyTurnOver(true);
+            arena.setPlayerTurnOver(false);
         }
     }
 }
